@@ -18,7 +18,7 @@ MyAIDAProcessor.OutputLevel = WARNING
 MyAIDAProcessor.ProcessorType = "AIDAProcessor"
 MyAIDAProcessor.Parameters = {
                               "Compress": ["1"],
-                              "FileName": ["histograms"],
+                              "FileName": ["output/histograms"],
                               "FileType": ["root"]
                               }
 
