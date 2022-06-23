@@ -1,21 +1,43 @@
-# source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
-source /cvmfs/sw.hsf.org/key4hep/setup.sh
+source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
+# source /cvmfs/sw.hsf.org/key4hep/setup.sh
 
-git clone https://github.com/iLCSoft/CLICPerformance
+CLICPERF="CLICPerformance/clicConfig/"
+if [ ! -d "$CLICPERF" ]; then
+  git clone https://github.com/iLCSoft/CLICPerformance
+fi
+
 cd CLICPerformance/clicConfig/
 
-ddsim --steeringFile clic_steer.py \
-      --compactFile $LCGEO/CLIC/compact/CLIC_o3_v14/CLIC_o3_v14.xml \
-      --enableGun --gun.distribution uniform \
-      --gun.particle mu- --gun.energy 10*GeV \
-      --random.seed 123 --outputFile mu_10GeV.slcio \
-      --numberOfEvents 10
+STEERFILE="clic_steer.py"
+COMPACTFILE="${LCGEO}/CLIC/compact/CLIC_o3_v14/CLIC_o3_v14.xml"
+GUNDISTRIBUTION="uniform"
+GUNPARTICLE="mu-"
+GUNENERGY="10*GeV"
+RANDOMSEED=123
+NUMEVENTS=10
 
-ddsim --steeringFile clic_steer.py \
-      --compactFile $LCGEO/CLIC/compact/CLIC_o3_v14/CLIC_o3_v14.xml \
-      --enableGun --gun.distribution uniform \
-      --gun.particle mu- \
-      --gun.energy 10*GeV \
-      --random.seed 123 \
-      --outputFile mu_10GeV_edm4hep.root \
-      --numberOfEvents 10
+ddsim --steeringFile $STEERFILE \
+      --compactFile $COMPACTFILE \
+      --enableGun --gun.distribution $GUNDISTRIBUTION \
+      --gun.particle $GUNPARTICLE --gun.energy $GUNENERGY \
+      --random.seed $RANDOMSEED --outputFile mu_10GeV.slcio \
+      --numberOfEvents $NUMEVENTS
+
+ddsim --steeringFile $STEERFILE \
+      --compactFile $COMPACTFILE \
+      --enableGun --gun.distribution $GUNDISTRIBUTION \
+      --gun.particle $GUNPARTICLE --gun.energy $GUNENERGY \
+      --random.seed $RANDOMSEED --outputFile mu_10GeV_edm4hep.root \
+      --numberOfEvents $NUMEVENTS
+
+
+cd ../../
+
+OUTPUTDIR="output"
+if [ ! -d "$OUTPUTDIR" ]; then
+  mkdir output
+fi
+
+
+mv CLICPerformance/clicConfig/mu_10GeV.slcio ./output/
+mv CLICPerformance/clicConfig/mu_10GeV_edm4hep.root ./output/
