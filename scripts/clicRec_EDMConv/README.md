@@ -6,9 +6,13 @@
 4. Produce plots comparing the converted LCIO and the EDM4hep outputs
 
 ```sh
+# 1. simulation
 sh generate_output.sh
+# 2. reconstruction
 sh run_reconstruction_slcio.sh
 sh run_reconstruction_edm4hep.sh
+# 3. convert LCIO to EDM4hep
 sh convert_slcio.sh
+# 4. plot
 python plotstuff.py
 ```
