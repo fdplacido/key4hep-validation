@@ -1,0 +1,32 @@
+name: linux
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        SETUP: ['/cvmfs/sw.hsf.org/key4hep/setup.sh', '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cvmfs-contrib/github-action-cvmfs@v2
+    - name: Start container
+      run: |
+        docker run \
+          -it --name val_clicrec \
+          -v ${{ github.workspace }}:/val_clicrec \
+          -v /cvmfs:/cvmfs:shared \
+          -d ghcr.io/aidasoft/centos7:latest /bin/bash
+    - name: RunValidation
+      run: |
+        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
+          cd val_clicrec;
+          cd scripts/clicRec_EDMConv
+          sh generate_output.sh;
+          sh run_reconstruction_slcio.sh;
+          sh run_reconstruction_edm4hep.sh;
+          sh convert_slcio.sh;
+          python plotstuff.py
+        '
