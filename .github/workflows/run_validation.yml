@@ -4,11 +4,12 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
-        SETUP: ['/cvmfs/sw.hsf.org/key4hep/setup.sh', '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+        # SETUP: ['/cvmfs/sw.hsf.org/key4hep/setup.sh', '/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
+        SETUP: ['/cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh']
     steps:
     - uses: actions/checkout@v2
     - uses: cvmfs-contrib/github-action-cvmfs@v2
@@ -19,14 +20,38 @@ jobs:
           -v ${{ github.workspace }}:/val_clicrec \
           -v /cvmfs:/cvmfs:shared \
           -d ghcr.io/aidasoft/centos7:latest /bin/bash
-    - name: RunValidation
+    - name: gen_input
       run: |
         docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
           cd val_clicrec;
           cd scripts/clicRec_EDMConv
           sh generate_output.sh;
+        '
+    - name: run_reco_LCIO
+      run: |
+        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
+          cd val_clicrec;
+          cd scripts/clicRec_EDMConv
           sh run_reconstruction_slcio.sh;
+        '
+    - name: run_reco_EDM4hep
+      run: |
+        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
+          cd val_clicrec;
+          cd scripts/clicRec_EDMConv
           sh run_reconstruction_edm4hep.sh;
+        '
+    - name: convert_LCIO
+      run: |
+        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
+          cd val_clicrec;
+          cd scripts/clicRec_EDMConv
           sh convert_slcio.sh;
+        '
+    - name: gen_plots
+      run: |
+        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
+          cd val_clicrec;
+          cd scripts/clicRec_EDMConv
           python plotstuff.py
         '
