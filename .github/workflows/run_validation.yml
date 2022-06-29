@@ -26,32 +26,8 @@ jobs:
           cd val_clicrec;
           cd scripts/clicRec_EDMConv
           sh generate_output.sh;
-        '
-    - name: run_reco_LCIO
-      run: |
-        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
-          cd val_clicrec;
-          cd scripts/clicRec_EDMConv
           sh run_reconstruction_slcio.sh;
-        '
-    - name: run_reco_EDM4hep
-      run: |
-        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
-          cd val_clicrec;
-          cd scripts/clicRec_EDMConv
           sh run_reconstruction_edm4hep.sh;
-        '
-    - name: convert_LCIO
-      run: |
-        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
-          cd val_clicrec;
-          cd scripts/clicRec_EDMConv
           sh convert_slcio.sh;
-        '
-    - name: gen_plots
-      run: |
-        docker exec val_clicrec /bin/bash -c 'source ${{ matrix.SETUP }};
-          cd val_clicrec;
-          cd scripts/clicRec_EDMConv
-          python plotstuff.py
+          python plotstuff.py;
         '
