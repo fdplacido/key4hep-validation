@@ -1,9 +1,12 @@
 # source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
 
-cp clicRec_e4h_input.py CLICPerformance/clicConfig/
+if [ ! -d "output/edm4hep" ]; then
+  mkdir output/edm4hep
+fi
 
+ln -s clicRec_e4h_input.py CLICPerformance/clicConfig/clicRec_e4h_input.py
 cd CLICPerformance/clicConfig/
 
 k4run ../../clicRec_e4h_input.py
 
-rm clicRec_e4h_input.py
+cd ../../

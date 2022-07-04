@@ -17,7 +17,9 @@ k4run clicReconstruction.py
 
 cd ../../
 
-mkdir output/slcio
+if [ ! -d "output/slcio" ]; then
+  mkdir output/slcio
+fi
 
 mv CLICPerformance/clicConfig/Output_DST.slcio output/slcio/
 mv CLICPerformance/clicConfig/Output_REC.slcio output/slcio/
