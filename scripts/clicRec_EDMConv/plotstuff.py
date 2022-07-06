@@ -107,7 +107,7 @@ def plot_all_branches(tree, chain_lcio, chain_e4h):
 
 
 def main():
-  lcio_conv_file = "output/edm4hep_conv/converted_slcio_rec_output.root"
+  lcio_conv_file = "output/edm4hep/converted_slcio_rec_output.root"
   e4h_folder = "output/edm4hep/"
   chain_lcio, chain_e4h = read_chains(lcio_conv_file, e4h_folder)
 
